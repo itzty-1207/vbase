@@ -16,6 +16,7 @@ const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
 const ESLintPlugin = require("eslint-webpack-plugin");
+const WebpackBar = require("webpackbar");
 const paths = require("./paths");
 const modules = require("./modules");
 const getClientEnvironment = require("./env");
@@ -279,6 +280,8 @@ module.exports = function (webpackEnv) {
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
+        "@": paths.appSrc,
+        src: paths.appSrc,
         "react-native": "react-native-web",
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
@@ -451,7 +454,7 @@ module.exports = function (webpackEnv) {
             // extensions .module.scss or .module.sass
             {
               test: lessRegex,
-              exclude: sassModuleRegex,
+              exclude: lessModuleRegex,
               use: getStyleLoaders(
                 {
                   importLoaders: 3,
@@ -467,6 +470,20 @@ module.exports = function (webpackEnv) {
               // Remove this when webpack adds a warning or an error for this.
               // See https://github.com/webpack/webpack/issues/6571
               sideEffects: true,
+            },
+            {
+              test: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 3,
+                  sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+                  modules: {
+                    mode: "local",
+                    getLocalIdent: getCSSModuleLocalIdent,
+                  },
+                },
+                "less-loader"
+              ),
             },
             {
               test: sassRegex,
@@ -523,6 +540,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
+      new WebpackBar(),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
