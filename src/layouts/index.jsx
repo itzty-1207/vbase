@@ -1,26 +1,27 @@
 import React, {useState, useMemo, useCallback} from "react";
 import {Layout, Menu, theme} from 'antd';
 import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
-import {getRoutes} from '@/commons/menus';
+import {useNavigate} from 'react-router-dom';
+import {getMenus} from '@/commons/menus';
 import logoSrc from '@/assets/yewu.svg';
 import style from './index.module.less';
 
 const {Header, Sider, Content} = Layout;
 export default function Layouts() {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
   const {token: {colorBgContainer}} = theme.useToken();
 
   const items = useMemo(() => {
-    const routeList = getRoutes();
+    const routeList = getMenus();
+    console.log('routeList', routeList);
     return routeList;
   }, [])
 
   const handleClick = useCallback((options) => {
-    console.log('options:', options);
-  }, [])
-  const handleSelect = useCallback((options) => {
-    console.log('optionsSelect:', options);
-  }, [])
+    const path = options.key;
+    navigate(path);
+  }, [navigate])
 
   return (
     <div>
@@ -36,7 +37,6 @@ export default function Layouts() {
             defaultSelectedKeys={[1]}
             items={items}
             onClick={handleClick}
-            onSelect={handleSelect}
           />
         </Sider>
         <Layout className="site-layout">
