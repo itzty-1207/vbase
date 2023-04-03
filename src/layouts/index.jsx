@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useState, useMemo, useCallback} from "react";
 import {Layout, Menu, theme} from 'antd';
-import {MenuFoldOutlined, MenuUnfoldOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined} from '@ant-design/icons';
+import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
+import {getRoutes} from '@/commons/menus';
 import logoSrc from '@/assets/yewu.svg';
 import style from './index.module.less';
 
@@ -8,6 +9,18 @@ const {Header, Sider, Content} = Layout;
 export default function Layouts() {
   const [collapsed, setCollapsed] = useState(false);
   const {token: {colorBgContainer}} = theme.useToken();
+
+  const items = useMemo(() => {
+    const routeList = getRoutes();
+    return routeList;
+  }, [])
+
+  const handleClick = useCallback((options) => {
+    console.log('options:', options);
+  }, [])
+  const handleSelect = useCallback((options) => {
+    console.log('optionsSelect:', options);
+  }, [])
 
   return (
     <div>
@@ -20,18 +33,10 @@ export default function Layouts() {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['1']}
-            items={[
-              {
-                key: '1', icon: <UserOutlined />, label: 'nav 1',
-                children: [
-                  {key: '21', icon: <VideoCameraOutlined />, label: 'nav 2'},
-                  {key: '31', icon: <UploadOutlined />, label: 'nav 3'},
-                ]
-              },
-              {key: '2', icon: <VideoCameraOutlined />, label: 'nav 2'},
-              {key: '3', icon: <UploadOutlined />, label: 'nav 3'},
-            ]}
+            defaultSelectedKeys={[1]}
+            items={items}
+            onClick={handleClick}
+            onSelect={handleSelect}
           />
         </Sider>
         <Layout className="site-layout">
