@@ -1,8 +1,9 @@
 import React, {useState, useMemo, useCallback} from "react";
 import {Layout, Menu, theme} from 'antd';
 import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
-import {useNavigate} from 'react-router-dom';
-import {getMenus} from '@/commons/menus';
+import {useNavigate, Routes, Route} from 'react-router-dom';
+import {getMenus, getMenuList} from '@/commons/menus';
+import ErrorPage from '@/components/errorPage';
 import logoSrc from '@/assets/yewu.svg';
 import style from './index.module.less';
 
@@ -12,10 +13,14 @@ export default function Layouts() {
   const navigate = useNavigate();
   const {token: {colorBgContainer}} = theme.useToken();
 
+  const routes = useMemo(() => {
+    const _routes = getMenuList();
+    return _routes;
+  }, [])
+
   const items = useMemo(() => {
-    const routeList = getMenus();
-    console.log('routeList', routeList);
-    return routeList;
+    const menus = getMenus();
+    return menus;
   }, [])
 
   const handleClick = useCallback((options) => {
@@ -46,7 +51,16 @@ export default function Layouts() {
             </span>
           </Header>
           <Content style={{margin: '24px 16px', padding: 24, minHeight: 280, background: colorBgContainer}}>
-            Content
+            <Routes>
+              {routes.map(item => {
+                const {id, path, component} = item || {};
+                if (!component) return null;
+
+                return <Route key={id} path={path} element={component} />
+              })}
+
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
           </Content>
         </Layout>
       </Layout>
