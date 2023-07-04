@@ -33,11 +33,12 @@ function plainToTree(dataSource) {
 function convertToMenus(dataSource) {
   const transform = (_dataSource) => {
     return _dataSource.map((nodes) => {
-      const { path, title, children, icon } = nodes || {};
+      const { path, title, children, icon, index } = nodes || {};
       const _children = children ? transform(children) : null;
       const item = {
         key: path,
         label: title,
+        index,
         icon,
       };
       if (children?.length) {

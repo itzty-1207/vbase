@@ -298,6 +298,14 @@ module.exports = function (webpackEnv) {
         // Make sure your source files are compiled, as they will not be processed in any way.
         new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson, reactRefreshRuntimeEntry, reactRefreshWebpackPluginRuntimeEntry, babelRuntimeEntry, babelRuntimeEntryHelpers, babelRuntimeRegenerator]),
       ],
+      fallback:{
+        path: require.resolve("path-browserify"),
+        assert: require.resolve("assert/"),
+        fs: false,
+        stream: require.resolve("stream-browserify"),
+        buffer: false,
+        constants: false,
+      }
     },
     module: {
       strictExportPresence: true,

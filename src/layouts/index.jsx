@@ -32,7 +32,7 @@ export default function Layouts() {
     <div>
       <Layout className={style.layoutContainer}>
         <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div className={style['logo-container']}>
+          <div className={style['logo-container']} onClick={() => navigate('/')}>
             <img src={logoSrc} alt="" className={style[collapsed ? 'img-single' : 'img-element']} />
             {!collapsed && <span className={style.logoText}>业务合集</span>}
           </div>
@@ -53,8 +53,9 @@ export default function Layouts() {
           <Content style={{margin: '24px 16px', padding: 24, minHeight: 280, background: colorBgContainer}}>
             <Routes>
               {routes.map(item => {
-                const {id, path, component} = item || {};
+                const {id, path, component, index} = item || {};
                 if (!component) return null;
+                if (index) return <Route key={id} path={path} element={component} default />
 
                 return <Route key={id} path={path} element={component} />
               })}
